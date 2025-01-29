@@ -1,11 +1,30 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+    CanActivate,
+    ExecutionContext,
+    ForbiddenException,
+    Injectable,
+} from '@nestjs/common';
 
 @Injectable()
 export class OwnershipGuard implements CanActivate {
-    canActivate(context: ExecutionContext): boolean {
-        // const request = context.switchToHttp().getRequest();
-        // const user = request.user;
-        // const resourceOwnerId = request.params.userId;
-        return true;
+
+    async canActivate(context: ExecutionContext): Promise<boolean> {
+        const request = context.switchToHttp().getRequest();
+        const user = request.user;
+        const resourceOwnerId = request.params.id;
+
+        if (!user) {
+            throw new ForbiddenException('User not authenticated');
+        }
+
+        if (!resourceOwnerId) {
+            throw new ForbiddenException('Resource owner ID not provided');
+        }
+
+        if (user.id !== +resourceOwnerId) {
+            throw new ForbiddenException('You do not have permission to access this resource');
+        }
+
+        return user.id === +resourceOwnerId;
     }
 }

@@ -36,17 +36,17 @@ export class CommentsService {
     }
 
     async update(id: number, updateCommentDto: UpdateCommentDto): Promise<CommentEntity> {
-        const comment = await this.commentsRepository.save({ ...updateCommentDto, updatedAt: Date.now() });
-        if (!comment) {
-            throw new NotFoundException(`Comment not found`);
+        const result = await this.commentsRepository.update(id, { ...updateCommentDto });
+        if (result.affected === 0) {
+            throw new NotFoundException(`Update comment with ID ${id} impossible`);
         }
-        return comment;
+        return this.findOneBy({ id });
     }
 
     async remove(id: number): Promise<void> {
         const result = await this.commentsRepository.delete(id);
         if (result.affected === 0) {
-            throw new NotFoundException(`User with ID ${id} not found`);
+            throw new NotFoundException(`Comment with ID ${id} not found`);
         }
     }
 }

@@ -3,8 +3,12 @@ import { Body, Controller, Delete, Param, ParseIntPipe, Post, Put, UseGuards } f
 import { CommentsService } from './comments.service';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { JwtGuard } from '@/auth/guards/jwt.guart';
 
 @Controller('comments')
+@ApiBearerAuth()
+@UseGuards(JwtGuard)
 export class CommentsController {
     constructor(private readonly commentsService: CommentsService) { }
 
@@ -14,7 +18,6 @@ export class CommentsController {
         return this.commentsService.remove(id);
     }
 
-    @UseGuards(OwnershipGuard)
     @Post()
     async create(@Body() createCommentDto: CreateCommentDto) {
         return this.commentsService.create(createCommentDto)

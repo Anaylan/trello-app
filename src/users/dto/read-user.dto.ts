@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsEmail, IsNumber, IsString } from 'class-validator';
 import { UserEntity } from '../entities/user.entity';
 
 export class UserReadDto {
@@ -8,7 +8,7 @@ export class UserReadDto {
     readonly id: number;
 
     @ApiProperty()
-    @IsString()
+    @IsEmail()
     readonly email: string;
 
     constructor(entity: UserEntity) {

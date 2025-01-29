@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNumber } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateCommentDto {
     @ApiProperty()
-    @IsEmail()
+    @IsString()
     readonly description: string;
 
     @ApiProperty()

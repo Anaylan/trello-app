@@ -4,6 +4,7 @@ import { UserEntity } from './entities/user.entity';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserReadDto } from './dto/read-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -13,7 +14,7 @@ export class UsersService {
         private readonly usersRepository: Repository<UserEntity>) { }
 
     async create(createUserDto: CreateUserDto): Promise<UserEntity> {
-        const user = this.usersRepository.create(createUserDto);
+        const user = await this.usersRepository.create(createUserDto);
         return this.usersRepository.save(user);
     }
 
@@ -38,9 +39,12 @@ export class UsersService {
     }
 
 
-    async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
-        await this.usersRepository.update(id, { ...updateUserDto, updatedAt: Date.now() });
-        return this.findOneBy({ id });
+    async update(id: number, updateUserDto: UpdateUserDto): Promise<UserReadDto> {
+        const result = await this.usersRepository.update(id, { ...updateUserDto });
+        if (result.affected === 0) {
+            throw new NotFoundException(`Update comment with ID ${id} impossible`);
+        }
+        return Promise.resolve(new UserReadDto(await this.findOneBy({ id })));
     }
 
     async remove(id: number): Promise<void> {

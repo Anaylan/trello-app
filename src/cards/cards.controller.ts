@@ -3,8 +3,12 @@ import { Body, Controller, Delete, Param, ParseIntPipe, Post, Put, UseGuards } f
 import { CardsService } from './cards.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { JwtGuard } from '@/auth/guards/jwt.guart';
 
 @Controller('cards')
+@ApiBearerAuth()
+@UseGuards(JwtGuard)
 export class CardsController {
     constructor(private readonly cardsService: CardsService) { }
 
@@ -14,7 +18,6 @@ export class CardsController {
         return this.cardsService.remove(id);
     }
 
-    @UseGuards(OwnershipGuard)
     @Post()
     async create(@Body() createCardDto: CreateCardDto) {
         return this.cardsService.create(createCardDto)

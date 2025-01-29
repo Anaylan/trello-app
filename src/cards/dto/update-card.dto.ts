@@ -1,5 +1,13 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateCardDto } from './create-card.dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
-export class UpdateCardDto extends PartialType(CreateCardDto) {
+export class UpdateCardDto {
+    @ApiProperty()
+    @IsString()
+    readonly name: string;
+
+    @ApiProperty()
+    @IsString()
+    readonly description: string;
+
 }

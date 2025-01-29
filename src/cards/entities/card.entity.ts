@@ -11,16 +11,16 @@ export class CardEntity {
     @Column()
     name: string;
 
-    @Column()
+    @Column({ type: "text" })
     description: string;
 
-    @ManyToOne(() => ColumnEntity, (column) => column.id)
+    @ManyToOne(() => ColumnEntity, (column) => column.id, { onDelete: "CASCADE" })
     column: ColumnEntity;
 
     @OneToMany(() => CommentEntity, (comment) => comment.card)
     comment: CommentEntity[];
 
-    @ManyToOne(() => UserEntity, (user) => user.id)
+    @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: "CASCADE" })
     user: UserEntity;
 
     @CreateDateColumn({ type: 'datetime' })

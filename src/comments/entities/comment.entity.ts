@@ -7,13 +7,13 @@ export class CommentEntity {
     @PrimaryGeneratedColumn({ name: 'id', unsigned: true })
     id: number;
 
-    @Column()
+    @Column({ type: "text" })
     description: string;
 
-    @ManyToOne(() => CardEntity, (card) => card.id)
+    @ManyToOne(() => CardEntity, (card) => card.id, { onDelete: "CASCADE" })
     card: CardEntity;
 
-    @ManyToOne(() => UserEntity, (user) => user.id)
+    @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: "CASCADE" })
     user: UserEntity;
 
     @CreateDateColumn({ type: 'datetime' })

@@ -3,8 +3,13 @@ import { Body, Controller, Delete, Post, UseGuards, Param, ParseIntPipe, Put } f
 import { CreateColumnDto } from './dto/create-column.dto';
 import { ColumnsService } from './columns.service';
 import { UpdateColumnDto } from './dto/update-column.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { JwtGuard } from '@/auth/guards/jwt.guart';
+
 
 @Controller('columns')
+@ApiBearerAuth()
+@UseGuards(JwtGuard)
 export class ColumnsController {
     constructor(private readonly columnsService: ColumnsService) { }
 
@@ -14,7 +19,6 @@ export class ColumnsController {
         return this.columnsService.remove(id);
     }
 
-    @UseGuards(OwnershipGuard)
     @Post()
     async create(@Body() createColumnDto: CreateColumnDto) {
         return this.columnsService.create(createColumnDto)

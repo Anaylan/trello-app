@@ -12,7 +12,7 @@ import { ConfigModule } from '@nestjs/config';
         ConfigModule.forRoot({ envFilePath: `.env.${process.env.NODE_ENV}` }),
         TypeOrmModule.forFeature([UserEntity]), JwtModule.register({
             global: true,
-            secret: process.env.JWT_SECRET || "changeme",
+            secret: process.env.JWT_SECRET,
             signOptions: { expiresIn: '15m' },
         })],
     providers: [AuthService, UsersService],

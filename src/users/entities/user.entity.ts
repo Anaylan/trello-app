@@ -2,7 +2,9 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, Up
 import { ColumnEntity } from '@/columns/entities/column.entity';
 import { CommentEntity } from '@/comments/entities/comment.entity';
 import { CardEntity } from '@/cards/entities/card.entity';
+import { ApiSchema } from '@nestjs/swagger';
 
+@ApiSchema()
 @Entity({ name: 'users' })
 export class UserEntity {
     @PrimaryGeneratedColumn({ name: 'id', unsigned: true })
@@ -10,6 +12,12 @@ export class UserEntity {
 
     @Column({ unique: true })
     email: string;
+
+    @Column()
+    firstname: string;
+
+    @Column()
+    lastname: string;
 
     @Column()
     password: string;

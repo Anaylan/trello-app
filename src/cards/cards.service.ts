@@ -38,17 +38,17 @@ export class CardsService {
 
 
     async update(id: number, updateCardDto: UpdateCardDto): Promise<CardEntity> {
-        const card = await this.cardsRepository.save({ ...updateCardDto, updatedAt: Date.now() });
-        if (!card) {
-            throw new Error('Card not found');
+        const result = await this.cardsRepository.update(id, { ...updateCardDto });
+        if (result.affected === 0) {
+            throw new NotFoundException(`Update card with ID ${id} impossible`);
         }
-        return card;
+        return this.findOneBy({ id });
     }
 
     async remove(id: number): Promise<void> {
         const result = await this.cardsRepository.delete(id);
         if (result.affected === 0) {
-            throw new NotFoundException(`User with ID ${id} not found`);
+            throw new NotFoundException(`Card with ID ${id} not found`);
         }
     }
 }

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, Repository, UpdateResult } from 'typeorm';
 import { ColumnEntity } from './entities/column.entity';
 import { CreateColumnDto } from './dto/create-column.dto';
 import { UpdateColumnDto } from './dto/update-column.dto';
@@ -36,15 +36,17 @@ export class ColumnsService {
     }
 
     async update(id: number, updateColumnDto: UpdateColumnDto): Promise<ColumnEntity> {
-        return this.columnsRepository.save({ ...updateColumnDto, updatedAt: Date.now() })
+        const result = await this.columnsRepository.update(id, { ...updateColumnDto });
+        if (result.affected === 0) {
+            throw new NotFoundException(`Update column with ID ${id} impossible`);
+        }
+        return this.findOneBy({ id });
     };
-    // await this.columnsRepository.save(updateColumnDto);
-    // return this.findByUserId({})
 
     async remove(id: number): Promise<void> {
         const result = await this.columnsRepository.delete(id);
         if (result.affected === 0) {
-            throw new NotFoundException(`User with ID ${id} not found`);
+            throw new NotFoundException(`Column with ID ${id} not found`);
         }
     }
 }

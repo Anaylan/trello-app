@@ -6,8 +6,11 @@ import { ColumnsService } from '@/columns/columns.service';
 import { CommentsService } from '@/comments/comments.service';
 import { CardsService } from '@/cards/cards.service';
 import { OwnershipGuard } from '@/auth/guards/ownership.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { JwtGuard } from '@/auth/guards/jwt.guart';
 
 @Controller('users')
+
 export class UsersController {
     constructor(private readonly usersService: UsersService,
         @Inject(forwardRef(() => ColumnsService))
@@ -38,7 +41,8 @@ export class UsersController {
         return this.usersService.remove(id);
     }
 
-    @UseGuards(OwnershipGuard)
+    @ApiBearerAuth()
+    @UseGuards(JwtGuard, OwnershipGuard)
     @Get(':id/columns')
     findColumns(@Param('id', ParseIntPipe) id: number) {
         const columns = this.columnsService.findAllBy({ user: { id } });
@@ -48,7 +52,8 @@ export class UsersController {
         return columns;
     }
 
-    @UseGuards(OwnershipGuard)
+    @ApiBearerAuth()
+    @UseGuards(JwtGuard, OwnershipGuard)
     @Get(':id/cards')
     findCards(@Param('id', ParseIntPipe) id: number) {
         const cards = this.cardsService.findAllBy({ user: { id } });
@@ -58,7 +63,8 @@ export class UsersController {
         return cards;
     }
 
-    @UseGuards(OwnershipGuard)
+    @ApiBearerAuth()
+    @UseGuards(JwtGuard, OwnershipGuard)
     @Get(':id/comments')
     findComments(@Param('id', ParseIntPipe) id: number) {
         const comments = this.columnsService.findAllBy({ user: { id } });

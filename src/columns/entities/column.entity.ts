@@ -10,10 +10,10 @@ export class ColumnEntity {
     @Column()
     name: string;
 
-    @Column()
+    @Column({ type: "text" })
     description: string;
 
-    @ManyToOne(() => UserEntity, (user) => user.columns)
+    @ManyToOne(() => UserEntity, (user) => user.columns, { onDelete: "CASCADE" })
     user: UserEntity;
 
     @OneToMany(() => CardEntity, (card) => card.column)
